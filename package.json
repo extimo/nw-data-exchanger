@@ -1,0 +1,28 @@
+{
+  "name": "nw-data-exchanger",
+  "version": "0.0.1",
+  "description": "exchange data from all types of databases with easy confiuration and friendly UI",
+  "main": "index.js",
+  "dependencies": {
+    "oracledb": "^1.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nemoii/nw-data-exchanger.git"
+  },
+  "keywords": [
+    "data",
+    "exchange",
+    "easy-use"
+  ],
+  "author": "NemoW",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nemoii/nw-data-exchanger/issues"
+  },
+  "homepage": "https://github.com/nemoii/nw-data-exchanger#readme"
+}
