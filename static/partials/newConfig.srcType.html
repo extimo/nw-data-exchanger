@@ -1,0 +1,18 @@
+<h2>欢迎使用NW数据交换系统</h2>
+<h2>我们将通过一系列步骤生成一个新的数据交换配置。</h2>
+<h2>首先，请选择源数据库的类型。</h2>
+<h2>&nbsp;</h2>
+<div class="col-sm-6">
+	<div class="well-lg btn text-center col-sm-10 col-sm-offset-1" ng-class="{'btn-success': cfg.srcInfos.type == 'orc', 'btn-default': true}" ng-click="cfg.srcInfos.type = 'orc'">
+		<h1>Oracle</h1>
+	</div>
+</div>
+<div class="col-sm-6">
+	<div class="well-lg btn text-center col-sm-10 col-sm-offset-1" ng-class="{'btn-success': cfg.srcInfos.type == 'sql', 'btn-default': true}" ng-click="cfg.srcInfos.type = 'sql'">
+		<h1 class="">Sql Server</h1>
+	</div>
+</div>
+<div class="col-sm-12">
+	<h2>&nbsp;</h2>
+	<a class="btn btn-block btn-primary" ui-sref="newConfig.srcInfos({type: '{{cfg.srcInfos.type}}'})" ng-if="cfg.srcInfos.type"><h2>下一步</h2></a>
+</div>

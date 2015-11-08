@@ -1,28 +1,81 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <title>NW数据交换系统</title>
+<html lang="zh-CN" ng-app="NWDataExchange">
 
-    <!-- Bootstrap -->
-    <link href="lib/bootstrap.min.css" rel="stylesheet">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+  <title>NW数据交换系统</title>
+  <base href="/">
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="lib/html5shiv.min.js"></script>
-      <script src="lib/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    <h1>你好，世界！</h1>
+  <!-- Bootstrap -->
+  <link href="lib/bootstrap.min.css" rel="stylesheet">
+  <link href="lib/font-awesome.min.css" rel="stylesheet">
+  <link href="lib/loader.css" rel="stylesheet">
+  <link href="assets/index.css" rel="stylesheet">
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="lib/jquery-1.11.3.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="lib/bootstrap.min.js"></script>
-  </body>
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="lib/html5shiv.min.js"></script>
+    <script src="lib/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body ng-controller="BaseController">
+  <nav class="navbar navbar-default">
+    <div ng-class="{'container': !fullWidth, 'container-fluid': fullWidth}">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="javascript:void(0)">NW数据交换系统</a>
+      </div>
+
+      <ul class="nav navbar-nav nav-menu">
+        <li ui-sref-active="active"><a ui-sref="dashboard">控制面板</a></li>
+        <li ui-sref-active="active"><a ui-sref="newConfig">创建新配置</a></li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a href="javascript:void(0)" ng-click="toggleWidth()">
+            <i class="fa" ng-class="{'fa-chevron-left': !fullWidth, 'fa-chevron-right': fullWidth}"></i>
+            <i class="fa" ng-class="{'fa-chevron-left': fullWidth, 'fa-chevron-right': !fullWidth}"></i>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div ng-class="{'container': !fullWidth, 'container-fluid': fullWidth}" ui-view></div>
+
+  <div class="modal fade" id="commonDialog" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" ng-bind="commonDialog.title"></h4>
+        </div>
+        <div class="modal-body" ng-bind="commonDialog.content"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-if="commonDialog.hasCancel" ng-bind="commonDialog.cancelText" ng-click="commonDialog.cancelAction()"></button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-if="commonDialog.hasConfirm" ng-bind="commonDialog.confirmText" ng-click="commonDialog.confirmAction()"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="lib/jquery-1.11.3.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="lib/bootstrap.min.js"></script>
+  <script src="lib/angular.min.js"></script>
+  <script src="lib/angular-ui-router.min.js"></script>
+  <script src="lib/pace.min.js"></script>
+  <script src="lib/TweenMax.min.js"></script>
+  <script src="lib/elastic-progress.min.js"></script>
+  <script src="app/app.js"></script>
+  <script src="app/states.js"></script>
+  <script src="app/controllers.js"></script>
+</body>
+
 </html>

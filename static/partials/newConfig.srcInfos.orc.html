@@ -1,0 +1,36 @@
+<h2>请填写连接到源数据库所需的信息。</h2>
+<h2>&nbsp;</h2>
+<form class="form-horizontal">
+	<div class="form-group">
+		<label for="database" class="col-sm-2 control-label">数据库</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" id="database" placeholder="数据库描述符" ng-model="cfg.srcInfos.db" ng-change="unverify()">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="username" class="col-sm-2 control-label">用户名</label>
+		<div class="col-sm-10">
+			<input type="text" class="form-control" id="username" placeholder="用户名" ng-model="cfg.srcInfos.user" ng-change="unverify()">
+		</div>
+	</div>
+	<div class="form-group">
+		<label for="password" class="col-sm-2 control-label">密码</label>
+		<div class="col-sm-10">
+			<input type="password" class="form-control" id="password" placeholder="密码" ng-model="cfg.srcInfos.pass" ng-change="unverify()">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<button class="btn btn-lg btn-primary" 
+				ng-disabled="!cfg.srcInfos.db || !cfg.srcInfos.user || !cfg.srcInfos.pass || verifying" 
+				ng-click="verify(cfg.srcInfos)">
+				验证 <i ng-if="verifying" class="fa fa-cog fa-spin" ></i>
+				<i ng-if="verified && verifyResult" class="fa fa-check"></i>
+				<i ng-if="verified && !verifyResult" class="fa fa-close"></i>
+			</button>
+			<a class="btn btn-lg btn-success" ng-if="verified && verifyResult"	ui-sref="newConfig.dstType">
+				下一步
+			</a>
+		</div>
+	</div>
+</form>

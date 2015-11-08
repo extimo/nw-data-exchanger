@@ -1,31 +1,18 @@
-var http = require('http');
-var fs = require('fs');
-var path = require('path');
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
+var server = require("http").Server(app);
+var io = require('socket.io')(server);
+require('./lib/io/handler')(io);
 
-var server = http.createServer(function (req, res) {
-	var filePath = 'static' + (req.url == '/' ? '/index.html' : req.url);
-
-	var extname = path.extname(filePath);
-	var contentType = require('./configs/file-exts')[extname] || 'text/plain';
-
-	fs.exists(filePath, function (exists) {
-		if (!exists) {
-			res.writeHead(302, {
-				'Location': '/'
-			});
-			return res.end();
-		}
-		fs.readFile(filePath, function (error, content) {
-			if (error) {
-				res.writeHead(500);
-				res.end();
-			}
-			else {
-				res.writeHead(200, { 'Content-Type': contentType });
-				res.end(content, 'utf-8');
-			}
-		});
-	});
-});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/static'));
+app.use('/api', require('./lib/api'));
+app.use(function(req, res){
+	res.sendStatus(404);
+	res.end();
+})
 
 server.listen(8021);
+require('open')('http://localhost:8021/');
