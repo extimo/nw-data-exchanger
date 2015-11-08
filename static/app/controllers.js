@@ -14,19 +14,11 @@ ctrls.controller('BaseController', ['$scope', function ($scope) {
 	$scope.startProgress = function(){
 		newConfigProgress.start();
 	};
-	$scope.verify = function(infos){
-		$scope.verified = false;
-		$scope.verifying = true;
-		var f = function(success){
-			$scope.verifyResult = success == 'true';
-			$scope.verifying = false;
-			$scope.verified = true;
-		}
-		$http.post('/api/testConnection', infos).success(f).error(f);
-	}
-	$scope.unverify = function(){
-		$scope.verified = false;
-		$scope.verifying = false;
-		$scope.verifyResult = false;
-	}
+}])
+.controller('NewConfigMainController', ['$scope', '$http', function ($scope, $http) {
+	$http.post('/api/tables', $scope.srcInfos).success(function(data){
+		
+	}).error(function(){
+		$scope.srcTables = null;
+	});
 }])

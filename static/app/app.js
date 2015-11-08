@@ -7,7 +7,7 @@ angular.module('NWDataExchange', ['ui.router', 'NWDEControllers'])
 	$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 		if(toState.name == 'newConfig'){
 			$timeout(function(){
-				$state.go('newConfig.srcType');
+				$state.go('newConfig.srcInfos');
 			});
 		}
 		else if(fromState.name.indexOf('newConfig') >= 0 && toState.name.indexOf('newConfig') < 0){

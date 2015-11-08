@@ -10,8 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + '/static'));
 app.use('/api', require('./lib/api'));
 app.use(function(req, res){
-	res.sendStatus(404);
-	res.end();
+	res.redirect('/');
 })
 
 server.listen(8021);
