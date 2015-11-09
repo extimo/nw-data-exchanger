@@ -1,4 +1,3 @@
-/* global io */
 angular.module('NWDataExchange')
 .config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
 	$urlRouterProvider.otherwise("/dashboard");
@@ -12,16 +11,16 @@ angular.module('NWDataExchange')
 		templateUrl: "partials/newConfig.html",
 		controller: "NewConfigController"
 	})
-	.state('newConfig.srcInfos', {
-		url: "/srcInfos",
-		templateUrl: "partials/newConfig.srcInfos.html",
+	.state('newConfig.srcConnInfo', {
+		url: "/srcConnInfo",
+		templateUrl: "partials/newConfig.srcConnInfo.html",
 		onEnter: function(newConfigProgress){
 			newConfigProgress.set(0);
 		}
 	})
-	.state('newConfig.dstInfos', {
-		url: "/dstInfos",
-		templateUrl: "partials/newConfig.dstInfos.html",
+	.state('newConfig.dstConnInfo', {
+		url: "/dstConnInfo",
+		templateUrl: "partials/newConfig.dstConnInfo.html",
 		onEnter: function(newConfigProgress){
 			newConfigProgress.set(25);
 		}
@@ -31,7 +30,6 @@ angular.module('NWDataExchange')
 		templateUrl: "partials/newConfig.main.html",
 		onEnter: function(newConfigProgress){
 			newConfigProgress.set(50);
-		},
-		controller: "NewConfigMainController"
+		}
 	});
 }]);

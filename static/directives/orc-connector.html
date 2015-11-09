@@ -19,17 +19,15 @@
 	</div>
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-8">
-			<button class="btn btn-lg btn-primary col-sm-5"
-				ng-class="{'btn-block': !verified || !verifyResult}" 
-				ng-disabled="!bindInfo.db || !bindInfo.user || !bindInfo.pass || verifying || (verified && verifyResult)" 
+			<button class="btn btn-lg btn-primary btn-block"
+				ng-class="{'btn-success': verified && verifyResult}" 
+				ng-disabled="!bindInfo.db || !bindInfo.user || !bindInfo.pass || verifying" 
 				ng-click="verify()">
-				验证 <i ng-if="verifying" class="fa fa-spinner fa-spin" ></i>
+				下一步 
+				<i ng-if="verifying" class="fa fa-spinner fa-spin" ></i>
 				<i ng-if="verified && verifyResult" class="fa fa-check"></i>
 				<i ng-if="verified && !verifyResult" class="fa fa-close"></i>
 			</button>
-			<a class="btn btn-lg btn-success col-sm-5 pull-right" ng-if="verified && verifyResult" ng-click="gotoNextState()">
-				下一步
-			</a>
 		</div>
 	</div>
 </form>

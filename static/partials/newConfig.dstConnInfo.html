@@ -1,0 +1,16 @@
+<div class="jumbotron">
+	<div class="container-fluid">
+		<h1>欢迎使用NW数据交换系统</h1>
+		<div ng-if="!cfg.dstConnInfo.type">
+			<h2>请选择目的数据库的类型。</h2>
+			<h2>&nbsp;</h2>
+			<db-selector data-bind-data="cfg.dstConnInfo"></db-selector>
+		</div>
+		<div ng-if="cfg.dstConnInfo.type">
+			<h2>请填写连接到目的数据库所需的信息。</h2>
+			<p><a href="javascript:void(0)" ng-click="cfg.dstConnInfo.type = null"><i class="fa fa-arrow-left"></i> 重新选择数据库类型</a></p>
+			<p>&nbsp;</p>
+			<db-connector type="{{cfg.dstConnInfo.type}}" data-bind-info="cfg.dstConnInfo" data-next-state="newConfig.main"></db-connector>
+		</div>
+	</div>
+</div>

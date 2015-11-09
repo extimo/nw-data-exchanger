@@ -1,0 +1,11 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+	// Controls if the editor should automatically format the line after typing
+	"editor.formatOnType": true,
+
+	// Maximum number of working files to show before scrollbars appear.
+	"explorer.workingFiles.maxVisible": 16,
+	
+	// Control whether jshint is enabled for JavaScript files or not.
+	"jshint.enable": true
+}

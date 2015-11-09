@@ -7,7 +7,7 @@ angular.module('NWDataExchange', ['ui.router', 'NWDEControllers'])
 	$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams){
 		if(toState.name == 'newConfig'){
 			$timeout(function(){
-				$state.go('newConfig.srcInfos');
+				$state.go('newConfig.srcConnInfo');
 			});
 		}
 		else if(fromState.name.indexOf('newConfig') >= 0 && toState.name.indexOf('newConfig') < 0){
@@ -30,17 +30,17 @@ angular.module('NWDataExchange', ['ui.router', 'NWDEControllers'])
 		}
 	});
 	
-	$rootScope.openDialog = function(opt){
+	$rootScope.openDialog = function (opt) {
 		$rootScope.commonDialog.title = opt.title || "提示";
 		$rootScope.commonDialog.content = opt.content || "";
 		$rootScope.commonDialog.hasCancel = opt.hasCancel || !!opt.cancelText;
 		$rootScope.commonDialog.hasConfirm = opt.hasConfirm || !!opt.confirmText;
 		$rootScope.commonDialog.cancelText = opt.cancelText || "取消";
 		$rootScope.commonDialog.confirmText = opt.confirmText || "确定";
-		$rootScope.commonDialog.cancelAction = opt.cancelAction || function(){};
-		$rootScope.commonDialog.confirmAction = opt.confirmAction || function(){};
+		$rootScope.commonDialog.cancelAction = opt.cancelAction || function () { };
+		$rootScope.commonDialog.confirmAction = opt.confirmAction || function () { };
 		$("#commonDialog").modal('show');
-	}
+	};
 })
 .factory('$socket', ['$rootScope', '$timeout', function ($rootScope, $timeout) {
 	var socket = io.connect('/');
@@ -63,7 +63,7 @@ angular.module('NWDataExchange', ['ui.router', 'NWDEControllers'])
 				});
 			});
 		}
-	}
+	};
 }])
 .config(['$locationProvider', function ($locationProvider) {
 	$locationProvider.html5Mode(true).hashPrefix('!');
@@ -71,10 +71,10 @@ angular.module('NWDataExchange', ['ui.router', 'NWDEControllers'])
 .service('newConfigProgress', function($timeout){
 	var p;
 	return {
-		start: function(){
-			if(p) return this;
+		start: function () {
+			if (p) return this;
 			p = $('#new-cfg-progress');
-			$timeout(function(){
+			$timeout(function () {
 				p.ElasticProgress({
 					labelHeight: 20,
 					jumpHeight: 10,
@@ -88,28 +88,28 @@ angular.module('NWDataExchange', ['ui.router', 'NWDEControllers'])
 			return this;
 		},
 		set: function (val) {
-			if(!p) return this;
-			if(p.ElasticProgress('getValue') * 100 > val){
+			if (!p) return this;
+			if (p.ElasticProgress('getValue') * 100 > val) {
 				this.end().start();
 			}
 			p.ElasticProgress('setValue', val / 100);
 			return this;
 		},
-		end: function(){
-			if(!p) return this;
+		end: function () {
+			if (!p) return this;
 			p.empty();
 			p = null;
 			return this;
 		},
-		cancel: function(){
-			if(!p) return this;
+		cancel: function () {
+			if (!p) return this;
 			p.ElasticProgress('cancel');
 			return this;
 		},
-		fail: function(){
-			if(!p) return this;
+		fail: function () {
+			if (!p) return this;
 			p.ElasticProgress('fail');
 			return this;
 		}
-	}
+	};
 });

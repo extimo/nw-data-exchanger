@@ -1,20 +1,7 @@
-<h1>欢迎使用NW数据交换系统</h1>
-<div ng-if="!cfg.dstInfo.type">
-	<h2>请选择目的数据库的类型。</h2>
-	<h2>&nbsp;</h2>
-	<div class="col-sm-6">
-		<div class="btn text-center col-sm-10 col-sm-offset-1" ng-class="{'btn-success': cfg.dstInfo.type == 'orc', 'btn-default': true}" ng-click="cfg.dstInfo.type = 'orc'">
-			<h1>Oracle</h1>
-		</div>
-	</div>
-	<div class="col-sm-6">
-		<div class="btn text-center col-sm-10 col-sm-offset-1" ng-class="{'btn-success': cfg.dstInfo.type == 'sql', 'btn-default': true}" ng-click="cfg.dstInfo.type = 'sql'">
-			<h1 class="">Sql Server</h1>
-		</div>
-	</div>
+<p>请将源数据库和目的数据的字段匹配。</p>
+<div class="col-xs-5">
+	<table-enumerator data-bind-title="源数据库表" data-bind-conn-info="cfg.srcConnInfo" data-bind-cfg="cfg.srcConfig" data-bind-align="right"></table-enumerator>
 </div>
-<div ng-if="cfg.dstInfo.type">
-	<h2>请填写连接到目的数据库所需的信息。<a class="btn btn-default" ng-click="cfg.dstInfo.type = null"><i class="fa fa-arrow-left"> 重新选择类型</i></a></h2>
-	<h2>&nbsp;</h2>
-	<connector type="{{cfg.dstInfo.type}}" data-bind-info="cfg.dstInfo" data-next-state="newConfig.main"></connector>
+<div class="col-xs-5 col-xs-offset-2">
+	<table-enumerator data-bind-title="目的数据库表" data-bind-conn-info="cfg.dstConnInfo" data-bind-cfg="cfg.dstConfig" data-bind-align="left"></table-enumerator>
 </div>
