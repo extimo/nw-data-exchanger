@@ -8,7 +8,7 @@ ctrls.controller('BaseController', ['$scope', function ($scope) {
 }])
 .controller('NewConfigController', ['$scope', '$http', 'newConfigProgress', function ($scope, $http, newConfigProgress) {
 	$scope.cfg = {
-		srcInfos: {},
+		srcInfos: {type: null},
 		dstInfos: {}
 	};
 	$scope.startProgress = function(){

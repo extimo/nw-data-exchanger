@@ -1,5 +1,23 @@
 angular.module('NWDataExchange')
-.directive("connector", function () {
+.directive("dbSelector", function () {
+	return {
+		restrict: 'E',
+		scope: {
+			bindData: '='
+		},
+		controller: function($scope){
+			$scope.dbs = [
+				{id: 'orc', name: 'Oracle'},
+				{id: 'sql', name: 'Sql Server'}
+			];
+			$scope.setType = function(type){
+				$scope.bindData.type = type;
+			};
+		},
+		templateUrl: '../directives/db-selector.html'
+	}
+})
+.directive("dbConnector", function () {
 	return {
 		restrict: 'E',
 		scope: {
@@ -11,7 +29,7 @@ angular.module('NWDataExchange')
 				$scope.verified = false;
 				$scope.verifying = true;
 				var f = function (success) {
-					$scope.verifyResult = success == 'true';
+					$scope.verifyResult = success;
 					$scope.verifying = false;
 					$scope.verified = true;
 				}

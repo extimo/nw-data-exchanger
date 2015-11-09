@@ -19,9 +19,9 @@
 	</div>
 	<div class="form-group">
 		<div class="col-sm-offset-2 col-sm-8">
-			<button class="btn btn-lg btn-primary"
-				ng-class="{'btn-block': !verified || !verifyResult, 'col-sm-5': true}" 
-				ng-disabled="!bindInfo.db || !bindInfo.user || !bindInfo.pass || verifying" 
+			<button class="btn btn-lg btn-primary col-sm-5"
+				ng-class="{'btn-block': !verified || !verifyResult}" 
+				ng-disabled="!bindInfo.db || !bindInfo.user || !bindInfo.pass || verifying || (verified && verifyResult)" 
 				ng-click="verify()">
 				验证 <i ng-if="verifying" class="fa fa-spinner fa-spin" ></i>
 				<i ng-if="verified && verifyResult" class="fa fa-check"></i>
