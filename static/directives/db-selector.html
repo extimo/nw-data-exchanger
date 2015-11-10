@@ -1,5 +1,6 @@
-<div class="col-sm-6" ng-repeat="type in dbs">
-	<div class="btn text-center col-sm-10 col-sm-offset-1" ng-class="{'btn-success': bindData.type == type.id, 'btn-default': true}" ng-click="setType(type.id)">
-		<h1 ng-bind="type.name"></h1>
-	</div>
+<div>
+	<label class="radio-inline" ng-repeat="type in dbTypes" ng-click="setType(type)">
+		<i class="fa" ng-class="{'fa-check-square-o': type == bindData.type, 'fa-square-o': type != bindData.type}"></i>
+		<span ng-bind="dbTypeConfigs[type].name"></span>
+	</label>
 </div>

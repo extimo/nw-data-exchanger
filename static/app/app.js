@@ -72,4 +72,17 @@ angular.module('NWDataExchange', ['ui.router', 'NWDEControllers'])
 	}])
 	.config(['$locationProvider', function ($locationProvider) {
 		$locationProvider.html5Mode(true).hashPrefix('!');
-	}]);
+	}])
+	.constant('dbTypeConfigs', {
+		orc: {
+			name: 'Oracle',
+			connRequires: [
+				{ id: 'db', name: '数据库', desc: '形如[hostname/]TNS', autoCompleteSource: '/api/oracleTNS' },
+				{ id: 'user', name: '用户名' },
+				{ id: 'pass', name: '密码', type: 'password' }
+			]
+		},
+		sql: {
+			name: 'Sql Server'
+		}
+	});

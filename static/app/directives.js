@@ -5,16 +5,15 @@ angular.module('NWDataExchange')
 			scope: {
 				bindData: '='
 			},
-			controller: function ($scope) {
-				$scope.dbs = [
-					{ id: 'orc', name: 'Oracle' },
-					{ id: 'sql', name: 'Sql Server' }
-				];
+			controller: function ($scope, dbTypeConfigs) {
+				$scope.dbTypes = Object.keys(dbTypeConfigs);
+				$scope.dbTypeConfigs = dbTypeConfigs;
 				$scope.setType = function (type) {
 					$scope.bindData.type = type;
 				};
 			},
-			templateUrl: '../directives/db-selector.html'
+			templateUrl: '../directives/db-selector.html',
+			replace: true
 		};
 	})
 	.directive("dbConnector", function () {
@@ -24,56 +23,63 @@ angular.module('NWDataExchange')
 				bindInfo: '=',
 				nextState: '@'
 			},
-			controller: function ($scope, $http, $state, $timeout) {
+			controller: function ($scope, $http, $state, $timeout, dbTypeConfigs) {
+				$scope.dbTypeConfigs = dbTypeConfigs;
+				
+				$scope.requireChanged = function () {
+					$scope.allFilledIn = $scope.dbTypeConfigs[$scope.bindInfo.type].connRequires.every(function (r) {
+						return !!$scope.bindInfo[r.id];
+					});
+				};
 				$scope.verify = function () {
 					$scope.verified = false;
 					$scope.verifying = true;
 					var f = function (success) {
-						$scope.verifyResult = success;
 						$scope.verifying = false;
 						$scope.verified = true;
-						$timeout(function () {
-							$state.go($scope.nextState);
-						}, 300);
+						if (success) {
+							$timeout(function () {
+								$state.go($scope.nextState);
+							}, 500);
+						}
 					};
 					$http.post('/api/testConnection', { connInfo: $scope.bindInfo }).success(f).error(f);
 				};
-				$scope.unverify = function () {
-					$scope.verified = false;
-					$scope.verifying = false;
-					$scope.verifyResult = false;
-				};
-				$scope.loaded = function () {
-					$("[data-autocomplete-source]").each(function (i, e) {
-						var $e = $(e);
-						$e.parent().after("<i class='fa fa-spin fa-cog'></i>");
-						$.getJSON($e.data('autocomplete-source')).done(function (data) {
-							$e.parent().next("i").remove();
-							$e.autocomplete({
-								minLength: 0,
-								delay: 0,
-								source: data,
-								select: function (event, ui) {
-									if ($e.attr('ng-model')) {
-										$scope.$eval($e.attr('ng-model') + ' = "' + ui.item.value + '"');
-										$scope.unverify();
-									}
-								}
-							});
-							$e.click(function () {
-								$e.autocomplete("search", "");
-							});
-						});
-					});
-				};
 			},
-			link: function (scope, elem, attr) {
-				scope.getContentUrl = function () {
-					return '../directives/' + attr.type + '-connector.html';
-				};
-			},
-			template: '<div ng-include="getContentUrl()" onload="loaded()"></div>',
+			templateUrl: '../directives/db-connector.html',
 			replace: true
+		};
+	})
+	.directive("autoCompleteSource", function () {
+		return {
+			restrict: 'A',
+			require: "ngModel",
+			scope: {
+				autoCompleteSource: '@'
+			},
+			link: function (scope, elem, attr, ngModel) {
+				var $e = $(elem), src = scope.autoCompleteSource;
+				if (!src || src.length === 0) return;
+				$e.parent().after("<i class='fa fa-spin fa-cog'></i>");
+				$.getJSON(src).done(function (data) {
+					$e.parent().next("i").remove();
+					$e.autocomplete({
+						minLength: 0,
+						delay: 0,
+						source: data,
+						select: function (event, ui) {
+							if ($e.attr('ng-model')) {
+								ngModel.$setViewValue(ui.item.value);
+							}
+						}
+					});
+					$e.click(function () {
+						$e.autocomplete("search", "");
+					});
+				}).fail(function () {
+					$e.parent().next("i").remove();
+				});
+			}
 		};
 	})
 	.directive("tableEnumerator", function () {
@@ -87,7 +93,7 @@ angular.module('NWDataExchange')
 			},
 			controller: function ($scope, $http) {
 				$scope.selectedTable = "";
-				
+
 				$http.post('/api/tables', { connInfo: $scope.bindConnInfo }).success(function (data) {
 					$scope.tables = data;
 				});

@@ -1,13 +1,11 @@
-<div ng-class="{'col-sm-12': !selectedTable, 'col-sm-4': selectedTable, 'col-sm-push-8': selectedTable && bindAlign == 'left'}">
-	<div class="panel panel-default text-{{bindAlign}}">
-		<div class="panel-heading " ng-bind="bindTitle"></div>
-		<i class="fa fa-spin fa-spinner fa-2x" ng-if="!tables"></i>
-		<div class="list-group" ng-if="tables">
-			<a href="javascript:void(0)" class="list-group-item container-fluid" ng-repeat="table in tables" ng-click="selectTable(table)">
-				<span class="col-xs-10 text-cutted" ng-class="{'col-xs-push-2': bindAlign == 'left'}" ng-bind="table"></span>
-				<i class="fa fa-check col-xs-2" ng-class="{'col-xs-pull-10': bindAlign == 'left'}" ng-if="bindCfg.tables[table]"></i>
-			</a>
-		</div>
+<div class="panel panel-default text-{{bindAlign}}" ng-if="!selectedTable">
+	<div class="panel-heading " ng-bind="bindTitle"></div>
+	<i class="fa fa-spin fa-spinner fa-2x" ng-if="!tables"></i>
+	<div class="list-group" ng-if="tables">
+		<a href="javascript:void(0)" class="list-group-item container-fluid" ng-repeat="table in tables" ng-click="selectTable(table)">
+			<span class="col-xs-10 text-cutted" ng-class="{'col-xs-push-2': bindAlign == 'left'}" ng-bind="table"></span>
+			<i class="fa fa-check col-xs-2" ng-class="{'col-xs-pull-10': bindAlign == 'left'}" ng-if="bindCfg.tables[table]"></i>
+		</a>
 	</div>
 </div>
 <column-enumerator ng-if="selectedTable" data-bind-align="{{bindAlign}}" data-bind-table></column-enumerator>
