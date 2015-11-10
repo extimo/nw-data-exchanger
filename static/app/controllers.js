@@ -5,14 +5,15 @@ angular.module('NWDEControllers', [])
 			$scope.fullWidth = !$scope.fullWidth;
 		};
 	}])
-	.controller('NewConfigController', ['$scope', '$http', 'newConfigProgress', function ($scope, $http, newConfigProgress) {
+	.controller('NewConfigController', ['$scope', '$http', '$state', function ($scope, $http, $state) {
 		$scope.cfg = {
 			srcConnInfo: {},
 			dstConnInfo: {},
 			srcConfig: { tables: [] },
 			dstConfig: { tables: [] }
 		};
-		$scope.startProgress = function () {
-			newConfigProgress.start();
-		};
+		
+		$scope.$on('$stateChangeSuccess', function () {
+			$scope.progress = $state.current.progress;
+		});
 	}]);

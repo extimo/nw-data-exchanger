@@ -103,11 +103,10 @@ angular.module('NWDataExchange')
 	.directive("columnEnumerator", function () {
 		return {
 			restrict: 'E',
-			scope: {
-			},
+			scope: true,
 			controller: function ($scope, $http) {
-				$scope.$watch('$parent.selectedTable', function (table) {
-					$http.post('/api/columns', { connInfo: $scope.$parent.bindConnInfo, table: table }).success(function (data) {
+				$scope.$watch('selectedTable', function (table) {
+					$http.post('/api/columns', { connInfo: $scope.bindConnInfo, table: table }).success(function (data) {
 						$scope.columns = data;
 					});
 				});

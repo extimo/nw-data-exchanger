@@ -1,8 +1,8 @@
-<div class="col-sm-8 pull-{{$parent.bindAlign}}">
+<div class="col-sm-8" ng-class="{'col-sm-pull-4': bindAlign == 'left'}">
 	<div class="panel panel-default">
-		<div class="panel-heading text-{{$parent.bindAlign}}" ng-bind="'表 ' + $parent.selectedTable + ' 的列'"></div>
-		<i class="fa fa-spin fa-spinner fa-3x" ng-if="!columns"></i>
-		<table class="table text-{{$parent.bindAlign}}">
+		<div class="panel-heading text-{{bindAlign}}" ng-bind="'表 ' + selectedTable + ' 的列'"></div>
+		<i class="fa fa-spin fa-spinner fa-2x" ng-if="!columns"></i>
+		<table class="table text-{{bindAlign}}">
 			<tr ng-repeat="column in columns">
 				<td ng-repeat="val in column" ng-bind="val"></td>
 			</tr>
