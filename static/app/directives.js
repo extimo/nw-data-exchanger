@@ -36,7 +36,7 @@ angular.module('NWDataExchange')
 					$scope.verifying = true;
 					var f = function (success) {
 						$scope.verifying = false;
-						$scope.verified = true;
+						$scope.verified = !!success;
 						if (success) {
 							$timeout(function () {
 								$state.go($scope.nextState);
@@ -102,6 +102,13 @@ angular.module('NWDataExchange')
 					$scope.bindCfg.tables[table] = $scope.bindCfg.tables[table] || {};
 					$scope.selectedTable = table;
 				};
+				
+				$scope.clearSelection = function () {
+					if (Object.keys($scope.bindCfg.tables[$scope.selectedTable]).length === 0) {
+						$scope.bindCfg.tables[$scope.selectedTable] = undefined;
+					}
+					$scope.selectedTable = null;
+				};
 			},
 			templateUrl: '../directives/table-enumerator.html'
 		};
@@ -109,9 +116,10 @@ angular.module('NWDataExchange')
 	.directive("columnEnumerator", function () {
 		return {
 			restrict: 'E',
-			scope: true,
+			scope: false,
 			controller: function ($scope, $http) {
-				$scope.$watch('selectedTable', function (table) {
+				$scope.$watch('selectedTable', function (table, old) {
+					if ($scope.columns && table == old) return;
 					$http.post('/api/columns', { connInfo: $scope.bindConnInfo, table: table }).success(function (data) {
 						$scope.columns = data;
 					});

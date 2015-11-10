@@ -1,14 +1,30 @@
-<div class="panel panel-default text-{{bindAlign}}">
-	<div class="panel-heading" ng-bind="'表 ' + selectedTable + ' 的列'"></div>
+<div class="panel panel-default text-center">
+	<div class="panel-heading">
+		<a class="text-muted no-decoration" title="返回">
+			<i class="fa fa-arrow-{{bindAlign == 'left' ? 'right' : 'left'}} pull-{{bindAlign == 'left' ? 'right' : 'left'}}" ng-click="clearSelection()"> </i>
+		</a>
+		表<span ng-bind="selectedTable"></span>的列
+	</div>
 	<i class="fa fa-spin fa-spinner fa-2x" ng-if="!columns"></i>
-	<table class="table text-cutted" ng-if="columns">
-		<tr ng-repeat="column in columns">
-			<td ng-if="bindAlign == 'left'" ng-click="bindCfg.tables[selectedTable].pk = column[0]">
-				<a title="主键"><i class="fa" ng-class="{'fa-dot-circle-o': bindCfg.tables[selectedTable].pk == column[0], 'fa-circle-o': true}"></i></a>
+	<table class="table table-bordered text-cutted" ng-if="columns">
+		<tr ng-repeat="column in columns" ng-if="bindAlign == 'left'">
+			<td ng-click="">
+				<a class="text-muted no-decoration" title="匹配"><i class="fa fa-exchange"></i></a>
 			</td>
-			<td ng-bind="column[0] + ' ' + column[1] + '(' + column[2] + ')'"></td>
-			<td ng-if="bindAlign == 'right'" ng-click="bindCfg.tables[selectedTable].pk = column[0]">
-				<a title="主键"><i class="fa" ng-class="{'fa-dot-circle-o': bindCfg.tables[selectedTable].pk == column[0], 'fa-circle-o': true}"></i></a>
+			<td ng-bind="column[0]"></td>
+			<td ng-bind="column[1] + '(' + column[2] + ')'"></td>
+			<td ng-click="bindCfg.tables[selectedTable].pk = column[0]">
+				<a class="text-muted no-decoration" title="主键"><i class="fa" ng-class="{'fa-dot-circle-o': bindCfg.tables[selectedTable].pk == column[0], 'fa-circle-o': true}"></i></a>
+			</td>
+		</tr>
+		<tr ng-repeat="column in columns" ng-if="bindAlign == 'right'">
+			<td ng-click="bindCfg.tables[selectedTable].pk = column[0]">
+				<a class="text-muted no-decoration" title="主键"><i class="fa" ng-class="{'fa-dot-circle-o': bindCfg.tables[selectedTable].pk == column[0], 'fa-circle-o': true}"></i></a>
+			</td>
+			<td ng-bind="column[1] + '(' + column[2] + ')'"></td>
+			<td ng-bind="column[0]"></td>
+			<td ng-click="">
+				<a class="text-muted no-decoration" title="匹配"><i class="fa fa-exchange"></i></a>
 			</td>
 		</tr>
 	</table>
