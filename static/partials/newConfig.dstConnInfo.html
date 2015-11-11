@@ -4,9 +4,9 @@
 <form class="form-horizontal">
 	<div class="form-group">
 		<label class="col-xs-2 control-label">目的数据库的类型</label>
-		<db-selector class="col-xs-10" data-bind-data="cfg.dstConnInfo"></db-selector>
+		<db-selector class="col-xs-10" data-bind-data="cfg.dst.connInfo"></db-selector>
 	</div>
 </form>
-<div ng-if="cfg.dstConnInfo.type">
-	<db-connector data-bind-info="cfg.dstConnInfo" data-next-state="newConfig.main"></db-connector>
+<div ng-if="cfg.dst.connInfo.type">
+	<db-connector data-bind-info="cfg.dst.connInfo" data-next-state="newConfig.main"></db-connector>
 </div>

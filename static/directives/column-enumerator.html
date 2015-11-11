@@ -8,8 +8,11 @@
 	<i class="fa fa-spin fa-spinner fa-2x" ng-if="!columns"></i>
 	<table class="table table-bordered text-cutted" ng-if="columns">
 		<tr ng-repeat="column in columns" ng-if="bindAlign == 'left'">
-			<td ng-click="">
-				<a class="text-muted no-decoration" title="匹配"><i class="fa fa-exchange"></i></a>
+			<td>
+				<a class="no-decoration" title="拖拽以匹配">
+					<column-linker data-type="{{column[1]}}" data-active-class="bg-info" data-hover-class="bg-success" data-bind-column="{{column}}">
+					</column-linker>
+				</a>
 			</td>
 			<td ng-bind="column[0]"></td>
 			<td ng-bind="column[1] + '(' + column[2] + ')'"></td>
@@ -23,8 +26,15 @@
 			</td>
 			<td ng-bind="column[1] + '(' + column[2] + ')'"></td>
 			<td ng-bind="column[0]"></td>
-			<td ng-click="">
-				<a class="text-muted no-decoration" title="匹配"><i class="fa fa-exchange"></i></a>
+			<td>
+				<a class="no-decoration" title="拖拽以匹配">
+					<column-linker data-type="{{column[1]}}" data-active-class="bg-info" data-hover-class="bg-success" data-bind-column="{{column}}"
+					ng-show="!bindCfg.tables[selectedTable].cols[column[0]]">
+					</column-linker>
+				</a>
+				<a class="no-decoration text-error" title="取消匹配" ng-if="bindCfg.tables[selectedTable].cols[column[0]]" ng-click="bindCfg.tables[selectedTable].cols[column[0]] = null">
+					<i class="fa fa-close"></i>
+				</a>
 			</td>
 		</tr>
 	</table>

@@ -5,9 +5,9 @@
 <form class="form-horizontal">
 	<div class="form-group">
 		<label class="col-xs-2 control-label">源数据库的类型</label>
-		<db-selector class="col-xs-10" data-bind-data="cfg.srcConnInfo"></db-selector>
+		<db-selector class="col-xs-10" data-bind-data="cfg.src.connInfo"></db-selector>
 	</div>
 </form>
-<div ng-if="cfg.srcConnInfo.type">
-	<db-connector data-bind-info="cfg.srcConnInfo" data-next-state="newConfig.dstConnInfo"></db-connector>
+<div ng-if="cfg.src.connInfo.type">
+	<db-connector data-bind-info="cfg.src.connInfo" data-next-state="newConfig.dstConnInfo"></db-connector>
 </div>

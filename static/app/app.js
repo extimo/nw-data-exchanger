@@ -77,8 +77,8 @@ angular.module('NWDataExchange', ['ui.router', 'NWDEControllers'])
 		orc: {
 			name: 'Oracle',
 			connRequires: [
-				{ id: 'db', name: '数据库', desc: '形如[hostname/]TNS', autoCompleteSource: '/api/oracleTNS' },
-				{ id: 'user', name: '用户名' },
+				{ id: 'db', name: '数据库', desc: '形如[hostname/]TNS', autoCompleteSource: '/api/oracleTNS, /api/load/orc/db', store: true },
+				{ id: 'user', name: '用户名', autoCompleteSource: '/api/load/orc/user', store: true },
 				{ id: 'pass', name: '密码', type: 'password' }
 			]
 		},
