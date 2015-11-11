@@ -3,6 +3,11 @@
 	text-overflow: ellipsis;
 }
 
-.no-decoration{
+a.no-decoration, a.no-decoration:hover{
 	text-decoration: none;
+	color:#000;
+}
+
+.cursor-move{
+	cursor: move;	
 }

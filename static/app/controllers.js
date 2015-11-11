@@ -15,7 +15,6 @@ angular.module('NWDEControllers', [])
 			$scope.progress = $state.current.progress;
 		});
 
-
 		$scope.$on('link', function (e, col1, col2) {
 			$scope.cfg[col1.of].tables[col1.table].cols[col1.column] = {
 				type: col1.type,
@@ -33,5 +32,17 @@ angular.module('NWDEControllers', [])
 					column: col1.column
 				}
 			};
+			
+			e.targetScope.$apply();
+			e.stopPropagation();
+		});
+
+		$scope.$on('unlink', function (e, who, table, column) {
+			var linked = $scope.cfg[who].tables[table].cols[column].linkedTo;
+			delete $scope.cfg[who].tables[table].cols[column];
+			delete $scope.cfg[$scope.cfg[who].to].tables[linked.table].cols[linked.column];
+			
+			e.stopPropagation();
+			$scope.$broadcast('configChanged');
 		});
 	}]);

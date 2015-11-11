@@ -120,11 +120,19 @@ angular.module('NWDataExchange')
 				};
 				
 				$scope.clearSelection = function () {
-					if ($scope.bindCfg.tables[$scope.selectedTable].cols.length === 0) {
-						$scope.bindCfg.tables[$scope.selectedTable] = undefined;
+					if (Object.keys($scope.bindCfg.tables[$scope.selectedTable].cols).length === 0) {
+						delete $scope.bindCfg.tables[$scope.selectedTable];
 					}
 					$scope.selectedTable = null;
 				};
+				
+				$scope.unlink = function (table, column) {
+					$scope.$emit('unlink', $scope.bindCfg.from, table, column);
+				};
+				
+				$scope.$on('configChanged', function () {
+					$scope.bindCfg = $scope.bindCfg;
+				});
 			},
 			templateUrl: '../directives/table-enumerator.html'
 		};
@@ -139,6 +147,7 @@ angular.module('NWDataExchange')
 					$http.post('/api/columns', { connInfo: $scope.bindCfg.connInfo, table: table }).success(function (data) {
 						$scope.columns = data;
 					});
+					
 				});
 			},
 			templateUrl: '../directives/column-enumerator.html',
@@ -190,11 +199,12 @@ angular.module('NWDataExchange')
 				$e.droppable({
 					accept: '.column-linker',
 					scope: scope.$parent.bindCfg.to + 'column-' + scope.type,
+					tolerance: 'pointer',
 					activate: function () {
-						$e.parent().parent().addClass(scope.activeClass);
+						$e.addClass(scope.activeClass);
 					},
 					deactivate: function () {
-						$e.parent().parent().removeClass(scope.activeClass);
+						$e.removeClass(scope.activeClass);
 					},
 					over: function () {
 						$e.parent().parent().addClass(scope.hoverClass);
@@ -203,13 +213,13 @@ angular.module('NWDataExchange')
 						$e.parent().parent().removeClass(scope.hoverClass);
 					},
 					drop: function (event, ui) {
+						$e.removeClass(scope.activeClass);
 						$e.parent().parent().removeClass(scope.hoverClass);
-						$e.parent().parent().removeClass(scope.activeClass);
 						ui.draggable.data('linking')(linkParam);
 					}
 				});
 			},
-			template: '<i class="fa fa-exchange"></i>',
+			template: '<i class="fa fa-exchange fa-fw"></i>',
 			replace: true
 		};
 	});
