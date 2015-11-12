@@ -8,6 +8,11 @@ a.no-decoration, a.no-decoration:hover{
 	color:#000;
 }
 
-.cursor-move{
-	cursor: move;	
+.cursor-crosshair{
+	cursor: crosshair;	
+}
+
+.no-padding{
+	padding-left: 0!important;
+	padding-right: 0!important;
 }

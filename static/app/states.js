@@ -24,6 +24,7 @@ angular.module('NWDataExchange')
 	.state('newConfig.main', {
 		url: "/main",
 		templateUrl: "partials/newConfig.main.html",
-		progress: 50
+		progress: 50,
+		controller: 'NewConfigMainController'
 	});
 }]);
