@@ -1,4 +1,4 @@
-<div class="panel panel-default text-{{bindAlign}}" ng-if="!selectedTable">
+<div class="panel panel-default text-{{bindAlign}}" ng-if="!bindCfg.selectedTable">
 	<div class="panel-heading " ng-bind="bindTitle"></div>
 	<i class="fa fa-spin fa-spinner fa-2x" ng-if="!tables"></i>
 	<div class="list-group" ng-if="tables">
@@ -8,4 +8,4 @@
 		</a>
 	</div>
 </div>
-<column-enumerator ng-if="selectedTable"></column-enumerator>
+<column-enumerator ng-if="bindCfg.selectedTable"></column-enumerator>

@@ -7,8 +7,8 @@ angular.module('NWDEControllers', [])
 	}])
 	.controller('NewConfigController', ['$scope', '$state', function ($scope, $state) {
 		$scope.cfg = {
-			src: { connInfo: {}, tables: [], from: 'src', to: 'dst' },
-			dst: { connInfo: {}, tables: [], from: 'dst', to: 'src' }
+			src: { connInfo: {}, tables: {}, from: 'src', to: 'dst' },
+			dst: { connInfo: {}, tables: {}, from: 'dst', to: 'src' }
 		};
 
 		$scope.$on('$stateChangeSuccess', function () {
@@ -23,22 +23,27 @@ angular.module('NWDEControllers', [])
 			dstHeight: 0,
 			lines: {},
 			gen: function () {
-				for (var column in $scope.cfg.src.tables[$scope.svg.srcTable].cols) {
-					var col = $scope.cfg.src.tables[$scope.svg.srcTable].cols[column];
+				for (var column in $scope.cfg.src.tables[$scope.cfg.src.selectedTable].cols) {
+					var col = $scope.cfg.src.tables[$scope.cfg.src.selectedTable].cols[column];
 					var linked = col.linkedTo;
 
-					if (linked.table == $scope.svg.dstTable) {
-						$scope.svg.lines[['src' + $scope.svg.srcTable + column, 'dst' + linked.table + linked.column].sort().join(':')] = {
+					if (linked.table == $scope.cfg.dst.selectedTable) {
+						$scope.svg.lines[['src' + $scope.cfg.src.selectedTable + column, 'dst' + linked.table + linked.column].sort().join(':')] = {
 							start: col.index,
 							end: $scope.cfg.dst.tables[linked.table].cols[linked.column].index
 						};
 					}
 				}
+			},
+			join: function () {
+				$scope.svg.showCount++;
+				if ($scope.svg.showCount >= 2) $scope.svg.gen();
+			},
+			leave: function () {
+				$scope.svg.showCount--;
+				$scope.svg.lines = {};
 			}
 		};
-		
-		$scope.srcTables = {};
-		$scope.dstTables = {};
 
 		$scope.onResize = function (width, height, who) {
 			$scope.svg[who + 'Height'] = height;
@@ -50,7 +55,7 @@ angular.module('NWDEControllers', [])
 			if ($scope.svg.showCount < 2) return;
 
 			for (var column in $scope.srcTables) {
-				
+
 			}
 		};
 

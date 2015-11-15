@@ -108,7 +108,8 @@ angular.module('NWDataExchange')
 				bindAlign: '@'
 			},
 			controller: function ($scope, $http) {
-				$scope.selectedTable = "";
+				$scope.bindCfg.selectedTable = "";
+				$scope.columns = {};
 
 				$http.post('/api/tables', { connInfo: $scope.bindCfg.connInfo }).success(function (data) {
 					$scope.tables = data;
@@ -116,21 +117,16 @@ angular.module('NWDataExchange')
 
 				$scope.selectTable = function (table) {
 					$scope.bindCfg.tables[table] = $scope.bindCfg.tables[table] || { cols: {} };
-					$scope.selectedTable = table;
-					$scope.$parent.svg.showCount++;
-					$scope.$parent.svg[$scope.bindCfg.from + 'Table'] = table;
-					if ($scope.$parent.svg.showCount == 2) {
-						$scope.$parent.svg.gen();
-					}
+					$scope.bindCfg.selectedTable = table;
+					$scope.$parent.svg.join();
 				};
 
 				$scope.clearSelection = function () {
-					if (Object.keys($scope.bindCfg.tables[$scope.selectedTable].cols).length === 0) {
-						delete $scope.bindCfg.tables[$scope.selectedTable];
+					if (Object.keys($scope.bindCfg.tables[$scope.bindCfg.selectedTable].cols).length === 0) {
+						delete $scope.bindCfg.tables[$scope.bindCfg.selectedTable];
 					}
-					$scope.selectedTable = null;
-					$scope.$parent.svg.lines = {};
-					$scope.$parent.svg.showCount--;
+					$scope.bindCfg.selectedTable = null;
+					$scope.$parent.svg.leave();
 				};
 
 				$scope.unlink = function (table, column) {
@@ -149,15 +145,10 @@ angular.module('NWDataExchange')
 			restrict: 'E',
 			scope: false,
 			controller: function ($scope, $http) {
-				$scope.$watch('selectedTable', function (table, old) {
-					if ($scope.columns && table == old) return;
-					if ($scope.$parent[$scope.bindCfg.from + 'Tables'][table]) {
-						$scope.columns = $scope.$parent[$scope.bindCfg.from + 'Tables'][table];
-						return;
-					}
+				$scope.$watch('bindCfg.selectedTable', function (table) {
+					if ($scope.columns[table]) return;
 					$http.post('/api/columns', { connInfo: $scope.bindCfg.connInfo, table: table }).success(function (data) {
-						$scope.columns = data;
-						$scope.$parent[$scope.bindCfg.from + 'Tables'][table] = data;
+						$scope.columns[table] = data;
 					});
 				});
 			},
@@ -178,7 +169,7 @@ angular.module('NWDataExchange')
 				var $e = $(elem);
 				var column = scope.$eval(scope.bindColumn);
 				var linkParam = {
-					table: scope.$parent.selectedTable,
+					table: scope.$parent.bindCfg.selectedTable,
 					column: column[0],
 					type: column[1],
 					size: column[2],
@@ -199,7 +190,7 @@ angular.module('NWDataExchange')
 					opacity: 0.01,
 					revert: true,
 					revertDuration: 0,
-					scope: scope.$parent.bindCfg.from + '-column-' + scope.commonType,
+					scope: scope.$parent.bindCfg.from + '-column-' + linkParam.commonType,
 					stack: '.column-linker',
 					zIndex: 100,
 					cursor: "crosshair",
@@ -210,7 +201,7 @@ angular.module('NWDataExchange')
 
 				$e.parent().parent().droppable({
 					accept: '.column-linker',
-					scope: scope.$parent.bindCfg.to + '-column-' + scope.commonType,
+					scope: scope.$parent.bindCfg.to + '-column-' + linkParam.commonType,
 					tolerance: 'pointer',
 					activate: function () {
 						$e.removeClass('fa-exchange');

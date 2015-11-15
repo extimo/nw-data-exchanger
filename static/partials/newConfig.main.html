@@ -12,7 +12,7 @@
 <br>
 <div class="row">
 	<div class="col-xs-5 no-padding" ng-attr-onresize="onResize(width, height, 'src')">
-		<table-enumerator data-bind-title="源数据库表" data-bind-cfg="cfg.src" data-bind-align="right"></table-enumerator>
+		<table-enumerator data-bind-title="源数据库表" data-bind-cfg="cfg.src" data-bind-align="right" data-bind-container="container.src"></table-enumerator>
 	</div>
 	<div class="col-xs-2 no-padding">
 		<svg ng-show="svg.showCount == 2" style="width: 100%; height: {{svg.height}}px">
@@ -21,6 +21,6 @@
 		</svg>
 	</div>
 	<div class="col-xs-5 no-padding" ng-attr-onresize="onResize(width, height, 'dst')">
-		<table-enumerator data-bind-title="目的数据库表" data-bind-cfg="cfg.dst" data-bind-align="left"></table-enumerator>
+		<table-enumerator data-bind-title="目的数据库表" data-bind-cfg="cfg.dst" data-bind-align="left" data-bind-container="container.dst"></table-enumerator>
 	</div>
 </div>
