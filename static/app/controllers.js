@@ -7,18 +7,18 @@ angular.module('NWDEControllers', [])
 	}])
 	.controller('NewConfigController', ['$scope', '$state', function ($scope, $state) {
 		$scope.cfg = {
-			src: { 
-				connInfo: {}, 
-				tables: {}, 
+			src: {
+				connInfo: {},
+				tables: {},
 				columns: {},
-				from: 'src', 
+				from: 'src',
 				to: 'dst'
 			},
-			dst: { 
-				connInfo: {}, 
-				tables: {}, 
+			dst: {
+				connInfo: {},
+				tables: {},
 				columns: {},
-				from: 'dst', 
+				from: 'dst',
 				to: 'src'
 			}
 		};
@@ -27,7 +27,7 @@ angular.module('NWDEControllers', [])
 			$scope.progress = $state.current.progress;
 		});
 	}])
-	.controller('NewConfigMainController', ['$scope', function ($scope) {
+	.controller('NewConfigMainController', ['$scope', '$timeout', function ($scope, $timeout) {
 		$scope.svg = {
 			showCount: 0,
 			height: 0,
@@ -89,65 +89,69 @@ angular.module('NWDEControllers', [])
 			if ($scope.svg.showCount < 2) return;
 
 			$scope.cfg.src.columns[$scope.cfg.src.selectedTable].forEach(function (col) {
-				
+
 			});
 		};
 		
-		$scope.clearSelection = function () {
-			$scope.$broadcast('clearSelection');
-		}
-
-		$scope.$on('linkColumn', function (e, col1, col2) {
-			$scope.cfg[col1.of].tables[col1.table].cols[col1.column] = $.extend({
-				linkedColumn: col2.column
-			}, col1);
-			$scope.cfg[col2.of].tables[col2.table].cols[col2.column] = $.extend({
-				linkedColumn: col1.column
-			}, col2);
-			$scope.svg.add([col1.of + col1.table + col1.column, col2.of + col2.table + col2.column].sort().join(':'),
-				col1.of == 'src' ? col1.index : col2.index,
-				col2.of == 'src' ? col1.index : col2.index
-			);
-
-			e.targetScope.$apply();
+		$scope.$on('linkColumn', function (e, srcIndex, dstIndex) {
 			e.stopPropagation();
+			$timeout(function () {
+				$scope.cfg.src.tables[$scope.cfg.src.selectedTable].cols[$scope.cfg.src.columns[$scope.cfg.src.selectedTable][srcIndex][0]] = {
+					index: srcIndex,
+					type: $scope.cfg.src.columns[$scope.cfg.src.selectedTable][srcIndex][1],
+					size: $scope.cfg.src.columns[$scope.cfg.src.selectedTable][srcIndex][2],
+					commonType: $scope.cfg.src.columns[$scope.cfg.src.selectedTable][srcIndex][3],
+					linkedColumn: $scope.cfg.dst.columns[$scope.cfg.dst.selectedTable][dstIndex][0]
+				};
+				$scope.cfg.dst.tables[$scope.cfg.dst.selectedTable].cols[$scope.cfg.dst.columns[$scope.cfg.dst.selectedTable][dstIndex][0]] = {
+					index: dstIndex,
+					type: $scope.cfg.dst.columns[$scope.cfg.dst.selectedTable][dstIndex][1],
+					size: $scope.cfg.dst.columns[$scope.cfg.dst.selectedTable][dstIndex][2],
+					commonType: $scope.cfg.dst.columns[$scope.cfg.dst.selectedTable][dstIndex][3],
+					linkedColumn: $scope.cfg.src.columns[$scope.cfg.src.selectedTable][srcIndex][0]
+				};
+				$scope.svg.add('dst' + $scope.cfg.dst.selectedTable + $scope.cfg.dst.columns[$scope.cfg.dst.selectedTable][dstIndex][0]
+					+ ':src' + $scope.cfg.src.selectedTable + $scope.cfg.src.columns[$scope.cfg.src.selectedTable][srcIndex][0], srcIndex, dstIndex);
+			});
 		});
 
-		$scope.$on('unlinkColumn', function (e, who, table, column) {
-			var linkedColumn = $scope.cfg[who].tables[table].cols[column].linkedColumn;
-			delete $scope.cfg[who].tables[table].cols[column];
-			delete $scope.cfg[$scope.cfg[who].to].tables[$scope.cfg[who].tables[table].linkedTable].cols[linkedColumn];
-			$scope.svg.remove([who + table + column, $scope.cfg[who].to + $scope.cfg[who].tables[table].linkedTable + linkedColumn].sort().join(':'));
-
+		$scope.$on('unlinkColumn', function (e, who, index) {
 			e.stopPropagation();
-			$scope.$broadcast('configChanged');
+			$timeout(function () {
+				var table = $scope.cfg[who].selectedTable;
+				var column = $scope.cfg[who].columns[$scope.cfg[who].selectedTable][index][0];
+				var linkedColumn = $scope.cfg[who].tables[table].cols[column].linkedColumn;
+				delete $scope.cfg[who].tables[table].cols[column];
+				delete $scope.cfg[$scope.cfg[who].to].tables[$scope.cfg[who].tables[table].linkedTable].cols[linkedColumn];
+				$scope.svg.remove([who + table + column, $scope.cfg[who].to + $scope.cfg[who].tables[table].linkedTable + linkedColumn].sort().join(':'));
+			});
 		});
 
 		$scope.$on('linkTable', function (e, table1, table2) {
-			$scope.cfg[table1.of].tables[table1.table].linkedTable = table2.table;
-			$scope.cfg[table2.of].tables[table2.table].linkedTable = table1.table;
-			$scope.cfg[table1.of].tables[table1.table].index = table1.index;
-			$scope.cfg[table2.of].tables[table2.table].index = table2.index;
-			
 			e.stopPropagation();
-			e.targetScope.$apply();
+			$timeout(function () {
+				$scope.cfg[table1.of].tables[table1.table].linkedTable = table2.table;
+				$scope.cfg[table2.of].tables[table2.table].linkedTable = table1.table;
+				$scope.cfg[table1.of].tables[table1.table].index = table1.index;
+				$scope.cfg[table2.of].tables[table2.table].index = table2.index;
+			});
 		});
 
 		$scope.$on('unlinkTable', function (e, who, table) {
-			$scope.svg.remove([who + table, $scope.cfg[who].to + $scope.cfg[who].tables[table].linkedTable].sort().join(':'));
-			delete $scope.cfg[$scope.cfg[who].to].tables[$scope.cfg[who].tables[table].linkedTable];
-			delete $scope.cfg[who].tables[table];
-
 			e.stopPropagation();
-			$scope.$broadcast('configChanged');
+			$timeout(function () {
+				$scope.svg.remove([who + table, $scope.cfg[who].to + $scope.cfg[who].tables[table].linkedTable].sort().join(':'));
+				delete $scope.cfg[$scope.cfg[who].to].tables[$scope.cfg[who].tables[table].linkedTable];
+				delete $scope.cfg[who].tables[table];
+			});
 		});
 
 		$scope.$on('editSelected', function (e, who, table) {
-			$scope.cfg[$scope.cfg[who].to].selectedTable = $scope.cfg[who].tables[table].linkedTable;
-			$scope.cfg[who].selectedTable = table;
-
 			e.stopPropagation();
-			$scope.$broadcast('configChanged');
-			$scope.svg.join().join();
+			$timeout(function () {
+				$scope.cfg[$scope.cfg[who].to].selectedTable = $scope.cfg[who].tables[table].linkedTable;
+				$scope.cfg[who].selectedTable = table;
+				$scope.svg.join().join();
+			});
 		});
 	}]);

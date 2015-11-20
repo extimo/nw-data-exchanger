@@ -2,7 +2,7 @@
 <p class="lead"><i class="fa fa-angle-right"></i> 请将源数据库和目的数据的字段匹配。</p>
 <hr>
 <div class="btn-group row" ng-show="svg.showCount >= 2">
-	<button type="button" class="btn btn-default" title="返回上一级" ng-click="clearSelection()">
+	<button type="button" class="btn btn-default" title="返回上一级" ng-click="$broadcast('clearSelection')">
 		<i class="fa fa-angle-left"></i> 返回
 	</button>
 	<button type="button" class="btn btn-default" title="将名字和类型都相同的字段匹配" ng-click="autoLink()">

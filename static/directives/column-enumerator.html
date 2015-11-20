@@ -6,11 +6,11 @@
 	<table class="table table-bordered text-cutted" ng-if="bindCfg.columns[bindCfg.selectedTable]">
 		<tr ng-repeat="column in bindCfg.columns[bindCfg.selectedTable]" ng-if="bindAlign == 'left'">
 			<td>
-				<a class="no-decoration text-error" title="取消匹配" ng-if="bindCfg.tables[bindCfg.selectedTable].cols[column[0]]" ng-click="unlinkColumn(bindCfg.selectedTable, column[0])">
+				<a class="no-decoration text-error" title="取消匹配" ng-if="bindCfg.tables[bindCfg.selectedTable].cols[column[0]]" ng-click="$emit('unlinkColumn', bindCfg.from, $index)">
 					<i class="fa fa-close fa-fw"></i>
 				</a>
 				<a class="no-decoration cursor-crosshair" title="拖拽以匹配" ng-if="!bindCfg.tables[bindCfg.selectedTable].cols[column[0]]">
-					<column-linker data-index="{{$index}}" data-bind-column="{{column}}"></column-linker>
+					<column-linker data-index="{{$index}}" data-on-link="$emit('linkColumn', src, dst)"></column-linker>
 				</a>
 			</td>
 			<td ng-bind="column[0]" class="text-cutted"></td>
@@ -27,10 +27,10 @@
 			<td ng-bind="column[0]" class="text-cutted"></td>
 			<td>
 				<a class="no-decoration cursor-crosshair" title="拖拽以匹配" ng-if="!bindCfg.tables[bindCfg.selectedTable].cols[column[0]]"">
-					<column-linker data-index="{{$index}}" data-bind-column="{{column}}">
+					<column-linker data-index="{{$index}}" data-on-link="$emit('linkColumn', src, dst)">
 					</column-linker>
 				</a>
-				<a class="no-decoration text-error" title="取消匹配" ng-if="bindCfg.tables[bindCfg.selectedTable].cols[column[0]]" ng-click="unlinkColumn(bindCfg.selectedTable, column[0])">
+				<a class="no-decoration text-error" title="取消匹配" ng-if="bindCfg.tables[bindCfg.selectedTable].cols[column[0]]" ng-click="$emit('unlinkColumn', bindCfg.from, $index)">
 					<i class="fa fa-close fa-fw"></i>
 				</a>
 			</td>

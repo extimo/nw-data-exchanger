@@ -10,7 +10,7 @@
 				</a>
 			</span>
 		</li>
-		<a class="list-group-item container-fluid" ng-repeat-end ng-show="bindCfg.tables[table].linkedTable" ng-click="editSelected(table)">
+		<a class="list-group-item container-fluid" ng-repeat-end ng-show="bindCfg.tables[table].linkedTable" ng-click="$emit('editSelected', bindCfg.from, table)">
 			<span class="col-xs-10 text-cutted" ng-class="{'col-xs-push-2': bindAlign == 'left'}" ng-bind="table"></span>
 			<span class="col-xs-2 text-error" ng-class="{'col-xs-pull-10': bindAlign == 'left'}">
 				<i class="fa fa-close fa-fw" title="取消匹配" ng-click="unlinkTable(table, $event)"></i>

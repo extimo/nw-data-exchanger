@@ -108,15 +108,9 @@ angular.module('NWDataExchange')
 				bindAlign: '@'
 			},
 			controller: function ($scope, $http) {
-				$scope.bindCfg.selectedTable = "";
-				
 				$http.post('/api/tables', { connInfo: $scope.bindCfg.connInfo }).success(function (data) {
 					$scope.tables = data;
 				});
-
-				$scope.editSelected = function (table) {
-					$scope.$emit('editSelected', $scope.bindCfg.from, table);
-				}
 
 				$scope.selectTable = function (table) {
 					$scope.bindCfg.tables[table] = $scope.bindCfg.tables[table] || { cols: {} };
@@ -132,19 +126,11 @@ angular.module('NWDataExchange')
 					$scope.$parent.svg.leave();
 				};
 
-				$scope.unlinkColumn = function (table, column) {
-					$scope.$emit('unlinkColumn', $scope.bindCfg.from, table, column);
-				};
-				
 				$scope.unlinkTable = function (table, $event) {
 					$scope.$emit('unlinkTable', $scope.bindCfg.from, table);
 					$event.stopPropagation();
 				};
 
-				$scope.$on('configChanged', function () {
-					$scope.bindCfg = $scope.bindCfg;
-				});
-				
 				$scope.$on('clearSelection', function () {
 					$scope.clearSelection();
 				});
@@ -173,25 +159,20 @@ angular.module('NWDataExchange')
 			restrict: 'E',
 			scope: {
 				index: '@',
-				bindColumn: '@',
-				onDrag: '&'
+				onDrag: '&',
+				onLink: '&'
 			},
 			link: function (scope, elem, attr) {
 				var $e = $(elem);
-				var column = scope.$eval(scope.bindColumn);
-				var linkParam = {
-					table: scope.$parent.bindCfg.selectedTable,
-					column: column[0],
-					type: column[1],
-					size: column[2],
-					commonType: column[3],
-					index: scope.index,
-					of: scope.$parent.bindCfg.from
-				};
+				var index = scope.index;
+				var myType = scope.$parent.bindCfg.columns[scope.$parent.bindCfg.selectedTable][index][3];
 
 				$e.addClass("column-linker");
-				$e.data('linking', function (col) {
-					scope.$emit('linkColumn', col, linkParam);
+				$e.data('linking', function (_index) {
+					var o = {};
+					o[scope.$parent.bindCfg.from] = index;
+					o[scope.$parent.bindCfg.to] = _index;
+					scope.onLink(o);
 				});
 
 				$e.draggable({
@@ -201,7 +182,7 @@ angular.module('NWDataExchange')
 					opacity: 0.01,
 					revert: true,
 					revertDuration: 0,
-					scope: scope.$parent.bindCfg.from + '-column-' + linkParam.commonType,
+					scope: scope.$parent.bindCfg.from + '-column-' + myType,
 					stack: '.column-linker',
 					zIndex: 100,
 					cursor: "crosshair",
@@ -212,7 +193,7 @@ angular.module('NWDataExchange')
 
 				$e.parent().parent().droppable({
 					accept: '.column-linker',
-					scope: scope.$parent.bindCfg.to + '-column-' + linkParam.commonType,
+					scope: scope.$parent.bindCfg.to + '-column-' + myType,
 					tolerance: 'pointer',
 					activate: function () {
 						$e.removeClass('fa-exchange');
@@ -233,7 +214,7 @@ angular.module('NWDataExchange')
 						$e.removeClass('fa-crosshairs fa-spin');
 						$e.parent().parent().removeClass('bg-success');
 						$e.parent().parent().droppable("destroy");
-						ui.draggable.data('linking')(linkParam);
+						ui.draggable.data('linking')(index);
 					}
 				});
 			},
