@@ -73,12 +73,12 @@ angular.module('NWDataExchange')
 				src = src.split(',');
 				$e.parent().after("<i class='fa fa-spin fa-cog'></i>");
 				$.when.apply($, src.map(function (url) {
-					return $.getJSON(url);
+					return $.getJSON(url.trim());
 				})).done(function () {
 					var data = src.length == 1 ? arguments[0] : Array.prototype.slice.call(arguments).reduce(function (arr, d) {
 						return arr.concat(d[0].filter(function (v) {
 							return arr.indexOf(v) < 0;
-						}) || []);
+						}));
 					}, []);
 					$e.autocomplete({
 						minLength: 0,
@@ -109,11 +109,14 @@ angular.module('NWDataExchange')
 			},
 			controller: function ($scope, $http) {
 				$scope.bindCfg.selectedTable = "";
-				$scope.columns = {};
-
+				
 				$http.post('/api/tables', { connInfo: $scope.bindCfg.connInfo }).success(function (data) {
 					$scope.tables = data;
 				});
+
+				$scope.editSelected = function (table) {
+					$scope.$emit('editSelected', $scope.bindCfg.from, table);
+				}
 
 				$scope.selectTable = function (table) {
 					$scope.bindCfg.tables[table] = $scope.bindCfg.tables[table] || { cols: {} };
@@ -129,12 +132,21 @@ angular.module('NWDataExchange')
 					$scope.$parent.svg.leave();
 				};
 
-				$scope.unlink = function (table, column) {
-					$scope.$emit('unlink', $scope.bindCfg.from, table, column);
+				$scope.unlinkColumn = function (table, column) {
+					$scope.$emit('unlinkColumn', $scope.bindCfg.from, table, column);
+				};
+				
+				$scope.unlinkTable = function (table, $event) {
+					$scope.$emit('unlinkTable', $scope.bindCfg.from, table);
+					$event.stopPropagation();
 				};
 
 				$scope.$on('configChanged', function () {
 					$scope.bindCfg = $scope.bindCfg;
+				});
+				
+				$scope.$on('clearSelection', function () {
+					$scope.clearSelection();
 				});
 			},
 			templateUrl: '../directives/table-enumerator.html'
@@ -146,9 +158,9 @@ angular.module('NWDataExchange')
 			scope: false,
 			controller: function ($scope, $http) {
 				$scope.$watch('bindCfg.selectedTable', function (table) {
-					if ($scope.columns[table]) return;
+					if ($scope.bindCfg.columns[table]) return;
 					$http.post('/api/columns', { connInfo: $scope.bindCfg.connInfo, table: table }).success(function (data) {
-						$scope.columns[table] = data;
+						$scope.bindCfg.columns[table] = data;
 					});
 				});
 			},
@@ -160,7 +172,6 @@ angular.module('NWDataExchange')
 		return {
 			restrict: 'E',
 			scope: {
-				type: '@',
 				index: '@',
 				bindColumn: '@',
 				onDrag: '&'
@@ -180,7 +191,7 @@ angular.module('NWDataExchange')
 
 				$e.addClass("column-linker");
 				$e.data('linking', function (col) {
-					scope.$emit('link', col, linkParam);
+					scope.$emit('linkColumn', col, linkParam);
 				});
 
 				$e.draggable({
@@ -223,6 +234,77 @@ angular.module('NWDataExchange')
 						$e.parent().parent().removeClass('bg-success');
 						$e.parent().parent().droppable("destroy");
 						ui.draggable.data('linking')(linkParam);
+					}
+				});
+			},
+			template: '<i class="fa fa-exchange fa-fw"></i>',
+			replace: true
+		};
+	})
+	.directive("tableLinker", function () {
+		return {
+			restrict: 'E',
+			scope: {
+				index: '@',
+				bindTable: '@',
+				onDrag: '&'
+			},
+			link: function (scope, elem, attr) {
+				var $e = $(elem);
+				var linkParam = {
+					table: scope.bindTable,
+					index: scope.index,
+					of: scope.$parent.bindCfg.from
+				};
+
+				$e.addClass("table-linker");
+				$e.data('linking', function (t) {
+					scope.$parent.selectTable(scope.bindTable);
+					scope.$emit('linkTable', t, linkParam);
+				});
+
+				$e.draggable({
+					helper: function () {
+						return $("<i></i>");
+					},
+					opacity: 0.01,
+					revert: true,
+					revertDuration: 0,
+					scope: scope.$parent.bindCfg.from + '-table',
+					stack: '.table-linker',
+					zIndex: 100,
+					cursor: "crosshair",
+					drag: function (event, ui) {
+						scope.onDrag(ui.position);
+					}
+				});
+
+				$e.parent().parent().parent().droppable({
+					accept: '.table-linker',
+					scope: scope.$parent.bindCfg.to + '-table',
+					tolerance: 'pointer',
+					activate: function () {
+						$e.removeClass('fa-exchange');
+						$e.addClass('fa-crosshairs fa-spin');
+					},
+					deactivate: function () {
+						$e.addClass('fa-exchange');
+						$e.removeClass('fa-crosshairs fa-spin');
+					},
+					over: function () {
+						$e.parent().parent().parent().addClass('list-group-item-success');
+					},
+					out: function () {
+						$e.parent().parent().parent().removeClass('list-group-item-success');
+					},
+					drop: function (event, ui) {
+						$e.addClass('fa-exchange');
+						$e.removeClass('fa-crosshairs fa-spin');
+						$e.parent().parent().parent().removeClass('list-group-item-success');
+						$e.parent().parent().parent().droppable("destroy");
+						scope.$parent.selectTable(scope.bindTable);
+						ui.draggable.data('linking')(linkParam);
+						scope.$emit('configChanged');
 					}
 				});
 			},

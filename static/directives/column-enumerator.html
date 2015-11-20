@@ -1,19 +1,16 @@
 <div class="panel panel-default text-center">
 	<div class="panel-heading">
-		<a class="no-decoration" title="返回">
-			<i class="fa fa-arrow-{{bindAlign == 'left' ? 'right' : 'left'}} pull-{{bindAlign == 'left' ? 'right' : 'left'}}" ng-click="clearSelection()"> </i>
-		</a>
 		表 <span ng-bind="bindCfg.selectedTable"></span> 的列
 	</div>
-	<i class="fa fa-spin fa-spinner fa-2x" ng-if="!columns[bindCfg.selectedTable]"></i>
-	<table class="table table-bordered text-cutted" ng-if="columns[bindCfg.selectedTable]">
-		<tr ng-repeat="column in columns[bindCfg.selectedTable]" ng-if="bindAlign == 'left'">
+	<i class="fa fa-spin fa-spinner fa-2x" ng-if="!bindCfg.columns[bindCfg.selectedTable]"></i>
+	<table class="table table-bordered text-cutted" ng-if="bindCfg.columns[bindCfg.selectedTable]">
+		<tr ng-repeat="column in bindCfg.columns[bindCfg.selectedTable]" ng-if="bindAlign == 'left'">
 			<td>
-				<a class="no-decoration text-error" title="取消匹配" ng-if="bindCfg.tables[bindCfg.selectedTable].cols[column[0]]" ng-click="unlink(bindCfg.selectedTable, column[0])">
+				<a class="no-decoration text-error" title="取消匹配" ng-if="bindCfg.tables[bindCfg.selectedTable].cols[column[0]]" ng-click="unlinkColumn(bindCfg.selectedTable, column[0])">
 					<i class="fa fa-close fa-fw"></i>
 				</a>
 				<a class="no-decoration cursor-crosshair" title="拖拽以匹配" ng-if="!bindCfg.tables[bindCfg.selectedTable].cols[column[0]]">
-					<column-linker data-type="{{column[1]}}" data-index="{{$index}}" data-bind-column="{{column}}"></column-linker>
+					<column-linker data-index="{{$index}}" data-bind-column="{{column}}"></column-linker>
 				</a>
 			</td>
 			<td ng-bind="column[0]" class="text-cutted"></td>
@@ -22,7 +19,7 @@
 				<a class="no-decoration" title="主键"><i class="fa" ng-class="{'fa-dot-circle-o': bindCfg.tables[bindCfg.selectedTable].pk == column[0], 'fa-circle-o': true}"></i></a>
 			</td>
 		</tr>
-		<tr ng-repeat="column in columns[bindCfg.selectedTable]" ng-if="bindAlign == 'right'">
+		<tr ng-repeat="column in bindCfg.columns[bindCfg.selectedTable]" ng-if="bindAlign == 'right'">
 			<td ng-click="bindCfg.tables[bindCfg.selectedTable].pk = column[0]">
 				<a class="no-decoration" title="主键"><i class="fa" ng-class="{'fa-dot-circle-o': bindCfg.tables[bindCfg.selectedTable].pk == column[0], 'fa-circle-o': true}"></i></a>
 			</td>
@@ -30,10 +27,10 @@
 			<td ng-bind="column[0]" class="text-cutted"></td>
 			<td>
 				<a class="no-decoration cursor-crosshair" title="拖拽以匹配" ng-if="!bindCfg.tables[bindCfg.selectedTable].cols[column[0]]"">
-					<column-linker data-type="{{column[1]}}" data-index="{{$index}}" data-bind-column="{{column}}">
+					<column-linker data-index="{{$index}}" data-bind-column="{{column}}">
 					</column-linker>
 				</a>
-				<a class="no-decoration text-error" title="取消匹配" ng-if="bindCfg.tables[bindCfg.selectedTable].cols[column[0]]" ng-click="unlink(bindCfg.selectedTable, column[0])">
+				<a class="no-decoration text-error" title="取消匹配" ng-if="bindCfg.tables[bindCfg.selectedTable].cols[column[0]]" ng-click="unlinkColumn(bindCfg.selectedTable, column[0])">
 					<i class="fa fa-close fa-fw"></i>
 				</a>
 			</td>

@@ -1,22 +1,25 @@
 <p class="h1">欢迎使用NW数据交换系统</p>
 <p class="lead"><i class="fa fa-angle-right"></i> 请将源数据库和目的数据的字段匹配。</p>
 <hr>
-<div class="btn-group row">
+<div class="btn-group row" ng-show="svg.showCount >= 2">
+	<button type="button" class="btn btn-default" title="返回上一级" ng-click="clearSelection()">
+		<i class="fa fa-angle-left"></i> 返回
+	</button>
 	<button type="button" class="btn btn-default" title="将名字和类型都相同的字段匹配" ng-click="autoLink()">
 		<i class="fa fa-link"></i> 自动匹配
 	</button>
-	<button type="button" class="btn btn-danger" title="取消所有已经匹配的字段" ng-class="unlinkAll()">
+	<button type="button" class="btn btn-danger" title="取消所有已经匹配的字段" ng-click="unlinkAll()">
 		<i class="fa fa-unlink"></i> 全部取消
 	</button>
 </div>
-<br>
+<br><br>
 <div class="row">
 	<div class="col-xs-5 no-padding" ng-attr-onresize="onResize(width, height, 'src')">
 		<table-enumerator data-bind-title="源数据库表" data-bind-cfg="cfg.src" data-bind-align="right" data-bind-container="container.src"></table-enumerator>
 	</div>
 	<div class="col-xs-2 no-padding">
-		<svg ng-show="svg.showCount == 2" style="width: 100%; height: {{svg.height}}px">
-			<line ng-repeat="(key, line) in svg.lines" x1="0" ng-attr-y1="{{line.start * 36 + 60}}" x2="100%" ng-attr-y2="{{line.end * 36 + 60}}"
+		<svg style="width: 100%; height: {{svg.height}}px">
+			<line ng-repeat="(key, line) in svg.lines" x1="0" ng-attr-y1="{{line.start * 37 + 60}}" x2="100%" ng-attr-y2="{{line.end * 37 + 60}}"
 			style="stroke:#000" />
 		</svg>
 	</div>

@@ -2,9 +2,19 @@
 	<div class="panel-heading " ng-bind="bindTitle"></div>
 	<i class="fa fa-spin fa-spinner fa-2x" ng-if="!tables"></i>
 	<div class="list-group" ng-if="tables">
-		<a href="javascript:void(0)" class="list-group-item container-fluid" ng-repeat="table in tables" ng-click="selectTable(table)">
-			<span class="col-xs-10 text-cutted" ng-class="{'col-xs-push-2': bindAlign == 'right'}" ng-bind="table"></span>
-			<i class="fa fa-check col-xs-2 text-success" ng-class="{'col-xs-pull-10': bindAlign == 'right'}" ng-if="bindCfg.tables[table]"></i>
+		<li class="list-group-item container-fluid" ng-repeat-start="table in tables" ng-show="!bindCfg.tables[table].linkedTable">
+			<span class="col-xs-10 text-cutted" ng-class="{'col-xs-push-2': bindAlign == 'left'}" ng-bind="table"></span>
+			<span class="col-xs-2" ng-class="{'col-xs-pull-10': bindAlign == 'left'}">
+				<a class="no-decoration cursor-crosshair" title="拖拽以匹配">
+					<table-linker data-index="{{$index}}" data-bind-table="{{table}}"></table-linker>
+				</a>
+			</span>
+		</li>
+		<a class="list-group-item container-fluid" ng-repeat-end ng-show="bindCfg.tables[table].linkedTable" ng-click="editSelected(table)">
+			<span class="col-xs-10 text-cutted" ng-class="{'col-xs-push-2': bindAlign == 'left'}" ng-bind="table"></span>
+			<span class="col-xs-2 text-error" ng-class="{'col-xs-pull-10': bindAlign == 'left'}">
+				<i class="fa fa-close fa-fw" title="取消匹配" ng-click="unlinkTable(table, $event)"></i>
+			</span>
 		</a>
 	</div>
 </div>
